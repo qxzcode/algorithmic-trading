@@ -87,19 +87,19 @@ class RSIStrategy(BaseStrategy):
             'reason': f'RSI: {current_rsi:.2f}, Price: ${current_price:.2f}'
         }
         
-        # Buy signal: RSI crosses below oversold
+        # Buy signal: RSI crosses below oversold (only if we have previous RSI to detect crossover)
         if current_rsi < self.params['oversold']:
-            if self.last_rsi is None or self.last_rsi >= self.params['oversold']:
+            if self.last_rsi is not None and self.last_rsi >= self.params['oversold']:
                 signal['action'] = 'buy'
                 signal['quantity'] = self.params['position_size']
-                signal['reason'] = f'RSI oversold: {current_rsi:.2f} < {self.params["oversold"]}'
+                signal['reason'] = f'RSI oversold crossover: {current_rsi:.2f} < {self.params["oversold"]}'
         
-        # Sell signal: RSI crosses above overbought
+        # Sell signal: RSI crosses above overbought (only if we have previous RSI to detect crossover)
         elif current_rsi > self.params['overbought']:
-            if self.last_rsi is None or self.last_rsi <= self.params['overbought']:
+            if self.last_rsi is not None and self.last_rsi <= self.params['overbought']:
                 signal['action'] = 'sell'
                 signal['quantity'] = self.params['position_size']
-                signal['reason'] = f'RSI overbought: {current_rsi:.2f} > {self.params["overbought"]}'
+                signal['reason'] = f'RSI overbought crossover: {current_rsi:.2f} > {self.params["overbought"]}'
         
         self.last_rsi = current_rsi
         

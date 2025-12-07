@@ -141,8 +141,9 @@ class LiveTrader:
         
         current_position = self.get_current_position()
         
+        # Note: This implementation supports long-only strategies (no short selling)
         if action == 'buy':
-            if current_position >= 0:
+            if current_position >= 0:  # Only buy if not in a short position
                 print(f"Executing BUY: {quantity} shares. Reason: {reason}")
                 return self.place_market_order('buy', quantity)
             else:
@@ -150,8 +151,8 @@ class LiveTrader:
                 return False
                 
         elif action == 'sell':
-            if current_position > 0:
-                sell_qty = min(quantity, current_position)
+            if current_position > 0:  # Only sell if we have a long position
+                sell_qty = min(quantity, current_position)  # Don't sell more than we have
                 print(f"Executing SELL: {sell_qty} shares. Reason: {reason}")
                 return self.place_market_order('sell', sell_qty)
             else:

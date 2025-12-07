@@ -69,11 +69,12 @@ class BacktraderStrategyWrapper(bt.Strategy):
         action = signal.get('action', 'hold')
         quantity = signal.get('quantity', 0)
         
+        # Note: This implementation supports long-only strategies (no short selling)
         if action == 'buy' and quantity > 0:
-            if not self.position:
+            if not self.position:  # Only buy if we don't have a position
                 self.order = self.buy(size=quantity)
         elif action == 'sell' and quantity > 0:
-            if self.position:
+            if self.position:  # Only sell if we have a long position
                 self.order = self.sell(size=quantity)
     
     def _get_dataframe(self, lookback: int = 100) -> pd.DataFrame:
