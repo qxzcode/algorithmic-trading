@@ -207,10 +207,10 @@ class Backtester:
         print(f'Final Portfolio Value: ${final_value:.2f}')
         print(f'Total Return: {((final_value - self.initial_cash) / self.initial_cash * 100):.2f}%')
         
-        if 'sharperatio' in sharpe:
+        if 'sharperatio' in sharpe and sharpe['sharperatio'] is not None:
             print(f'Sharpe Ratio: {sharpe["sharperatio"]:.2f}')
         
-        if 'max' in drawdown:
+        if 'max' in drawdown and drawdown['max'].get('drawdown') is not None:
             print(f'Max Drawdown: {drawdown["max"]["drawdown"]:.2f}%')
         
         if 'total' in trades:
