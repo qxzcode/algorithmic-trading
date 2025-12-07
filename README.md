@@ -18,9 +18,9 @@ git clone https://github.com/qxzcode/algorithmic-trading.git
 cd algorithmic-trading
 ```
 
-2. Install dependencies:
+2. [Install `uv`](https://docs.astral.sh/uv/getting-started/installation/), then install dependencies:
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 3. Set up your Alpaca API credentials:
@@ -79,7 +79,7 @@ results = backtester.run()
 
 Or use the example script:
 ```bash
-python examples/backtest_example.py
+uv run examples/backtest_example.py
 ```
 
 ### 2. Live Trading (Paper Trading)
@@ -106,7 +106,7 @@ trader.run(interval_minutes=60)  # Check every hour
 
 Or use the interactive example script:
 ```bash
-python examples/live_trading_example.py
+uv run examples/live_trading_example.py
 ```
 
 ### 3. Creating a Custom Strategy
