@@ -25,6 +25,8 @@ class BacktraderStrategyWrapper(bt.Strategy):
         
         self.dataclose = self.datas[0].close
         self.order = None
+        # Record executed trades for later inspection/plotting
+        self.executed_trades = []  # list of dicts: {'datetime': datetime, 'price': float, 'action': 'buy'|'sell', 'size': int}
         
     def notify_order(self, order):
         """Called when order status changes."""
@@ -32,14 +34,20 @@ class BacktraderStrategyWrapper(bt.Strategy):
             return
         
         if order.status in [order.Completed]:
+            # Capture execution details for plotting/analysis
+            exec_dt = self.datas[0].datetime.datetime(0)
+            exec_price = order.executed.price
+            exec_size = getattr(order.executed, 'size', None)
             if order.isbuy():
-                print(f'BUY EXECUTED: Price: {order.executed.price:.2f}, '
+                print(f'BUY EXECUTED: Price: {exec_price:.2f}, '
                       f'Cost: {order.executed.value:.2f}, '
                       f'Comm: {order.executed.comm:.2f}')
+                self.executed_trades.append({'datetime': exec_dt, 'price': exec_price, 'action': 'buy', 'size': exec_size})
             elif order.issell():
-                print(f'SELL EXECUTED: Price: {order.executed.price:.2f}, '
+                print(f'SELL EXECUTED: Price: {exec_price:.2f}, '
                       f'Cost: {order.executed.value:.2f}, '
                       f'Comm: {order.executed.comm:.2f}')
+                self.executed_trades.append({'datetime': exec_dt, 'price': exec_price, 'action': 'sell', 'size': exec_size})
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
             print('Order Canceled/Margin/Rejected')
         
@@ -203,6 +211,9 @@ class Backtester:
         drawdown = strat.analyzers.drawdown.get_analysis()
         trades = strat.analyzers.trades.get_analysis()
         
+        # Extract executed trades recorded by the wrapper (if any)
+        trades_detail = getattr(strat, 'executed_trades', [])
+        
         # Print results
         print('-' * 60)
         print(f'Final Portfolio Value: ${final_value:.2f}')
@@ -229,6 +240,7 @@ class Backtester:
             'max_drawdown': drawdown.get('max', {}).get('drawdown'),
             'total_trades': trades.get('total', {}).get('total', 0),
             'won_trades': trades.get('won', {}).get('total', 0),
+            'trades_detail': trades_detail,
         }
     
     def plot(self):

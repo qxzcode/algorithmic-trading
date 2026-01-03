@@ -1,5 +1,25 @@
 Bryan Tasks
-    Get alpaca account
+    Get alpaca account - done
 
 Quinn Tasks
    Get alpaca account
+
+Coding framework
+
+Phase 1
+Create main code to interact with alpaca and implement base strategy
+
+    Base strategy
+    Read a list of symbols to do analysis on
+    Perform analysis on each symbol
+    From analysis determine which stocks might need to be boough or sold
+    Actually perform the order
+        Buy order will wait until RSI crossover above oversold than will wait 
+        for macd crossover of fast above slow to issue a limit order set at the macd crossover with the buy there will be a stop loss which is minus 3 percent change in price and a profit target of 5 percent or when rsi crosses under overbought and macd crossover of fast below slow
+
+
+
+Phase 2
+Develop or interface with a stock screener to choose which stocks to watch and 
+try and implement strategy
+Add to strategy of trailing stop loss as another method
